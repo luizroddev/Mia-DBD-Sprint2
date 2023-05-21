@@ -11,9 +11,10 @@ Esta API foi criada para auxiliar no processo de lógica do aplicativo Mia. A AP
 - `createdAt` (datetime): Data e hora em que o usuário foi cadastrado.
 
 ### Tarefa
-- `titulo` (string): Título da tarefa.
-- `passos` (array): Lista de passos detalhados para a execução da tarefa. Cada passo é um objeto que contém um texto gerado pelo GPT-3.
-- `aplicativo` (string, obrigatório): Nome do aplicativo a qual a tarefa se refere.
+- `title` (string): Título da tarefa.
+- `steps` (array): Lista de passos detalhados para a execução da tarefa. Cada passo é um objeto que contém um texto gerado pelo GPT-3.
+- `applicationId` (integer, obrigatório): ID do Aplicativo a qual a tarefa se refere.
+- `createdAt` (datetime): Data e hora em que a tarefa foi criada.
 
 ## Endpoints
 
@@ -23,9 +24,9 @@ Esta API foi criada para auxiliar no processo de lógica do aplicativo Mia. A AP
 Cria um novo usuário.
 
 **Parâmetros do corpo:**
-- `nome` (string, obrigatório): Nome do usuário.
+- `name` (string, obrigatório): Nome do usuário.
 - `email` (string, obrigatório): Endereço de e-mail do usuário.
-- `senha` (string, obrigatório): Senha do usuário.
+- `password` (string, obrigatório): Senha do usuário.
 
 **Respostas:**
 - `201 Created`: Usuário criado com sucesso.
@@ -55,9 +56,9 @@ Atualiza informações de um usuário específico.
 - `id` (integer, obrigatório): ID do usuário.
 
 **Parâmetros do corpo:**
-- `nome` (string, opcional): Nome do usuário.
+- `name` (string, opcional): Nome do usuário.
 - `email` (string, opcional): Endereço de e-mail do usuário.
-- `senha` (string, opcional): Senha do usuário.
+- `password` (string, opcional): Senha do usuário.
 
 **Respostas:**
 - `200 OK`: Usuário atualizado com sucesso.
