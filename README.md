@@ -5,10 +5,10 @@ Esta API foi criada para auxiliar no processo de lógica do aplicativo Mia. A AP
 ## Entidades
 
 ### Usuario
-- `nome` (string): Nome do usuário.
+- `name` (string): Nome do usuário.
 - `email` (string): Endereço de e-mail do usuário.
-- `senha` (string): Senha do usuário.
-- `data_cadastro` (datetime): Data e hora em que o usuário foi cadastrado.
+- `password` (string): Senha do usuário.
+- `createdAt` (datetime): Data e hora em que o usuário foi cadastrado.
 
 ### Tarefa
 - `titulo` (string): Título da tarefa.
@@ -74,28 +74,14 @@ Exclui um usuário específico.
 - `204 No Content`: Usuário excluído com sucesso.
 - `404 Not Found`: Usuário não encontrado.
 
-### Tarefas
-
-#### `POST /tarefas`
-Cria uma nova tarefa.
-
-**Parâmetros do corpo:**
-- `titulo` (string, obrigatório): Título da tarefa.
-- `passos` (array, obrigatório): Lista de passos da tarefa.
-- `aplicativo` (string, obrigatório): Nome do aplicativo a qual a tarefa se refere.
-
-**Respostas:**
-- `201 Created`: Tarefa criada com sucesso.
-- `400 Bad Request`: Parâmetros inválidos.
-
-#### `GET /tarefas`
+#### `GET /tasks`
 Lista todas as tarefas cadastradas.
 
 **Respostas:**
 - `200 OK`: Retorna uma lista de tarefas.
 - `404 Not Found`: Nenhuma tarefa encontrada.
 
-#### `GET /tarefas/{id}`
+#### `GET /tasks/{id}`
 Recupera informações sobre uma tarefa específica.
 
 **Parâmetros do caminho:**
@@ -105,23 +91,37 @@ Recupera informações sobre uma tarefa específica.
 - `200 OK`: Retorna informações da tarefa.
 - `404 Not Found`: Tarefa não encontrada.
 
-#### `PUT /tarefas/{id}`
+#### `POST /tasks`
+Cria uma nova tarefa.
+
+**Corpo da solicitação:**
+- `title` (string, obrigatório): Título da tarefa.
+- `createdAt` (string, opcional): Data e hora de criação da tarefa no formato "yyyy-MM-dd'T'HH:mm:ss".
+- `applicationId` (integer, opcional): ID da aplicação relacionada à tarefa.
+- `steps` (array, opcional): Lista de etapas da tarefa.
+
+**Respostas:**
+- `201 Created`: Tarefa criada com sucesso.
+- `400 Bad Request`: Parâmetros inválidos.
+
+#### `PUT /tasks/{id}`
 Atualiza informações de uma tarefa específica.
 
 **Parâmetros do caminho:**
 - `id` (integer, obrigatório): ID da tarefa.
 
-**Parâmetros do corpo:**
-- `titulo` (string, opcional): Título da tarefa.
-- `passos` (array, opcional): Lista de passos da tarefa.
-- `aplicativo` (string, obrigatório): Nome do aplicativo a qual a tarefa se refere.
+**Corpo da solicitação:**
+- `title` (string, obrigatório): Título da tarefa.
+- `createdAt` (string, opcional): Data e hora de criação da tarefa no formato "yyyy-MM-dd'T'HH:mm:ss".
+- `applicationId` (integer, opcional): ID da aplicação relacionada à tarefa.
+- `steps` (array, opcional): Lista de etapas da tarefa.
 
 **Respostas:**
-- `200 OK`: Tarefa atualizada com sucesso.
+- `204 No Content`: Tarefa atualizada com sucesso.
 - `400 Bad Request`: Parâmetros inválidos.
 - `404 Not Found`: Tarefa não encontrada.
 
-#### `DELETE /tarefas/{id}`
+#### `DELETE /tasks/{id}`
 Exclui uma tarefa específica.
 
 **Parâmetros do caminho:**
@@ -131,29 +131,74 @@ Exclui uma tarefa específica.
 - `204 No Content`: Tarefa excluída com sucesso.
 - `404 Not Found`: Tarefa não encontrada.
 
-## Autenticação e Autorização
+### Perguntas
 
-Para garantir a segurança e privacidade dos dados dos usuários, a API utiliza um sistema de autenticação e autorização baseado em tokens. Um token de acesso é gerado ao fazer login com um e-mail e senha válidos.
+#### `POST /ask`
+Obtém etapas e imagens com base em uma pergunta.
 
-### `POST /auth/login`
-Autentica um usuário e retorna um token de acesso.
-
-**Parâmetros do corpo:**
-- `email` (string, obrigatório): Endereço de e-mail do usuário.
-- `senha` (string, obrigatório): Senha do usuário.
+**Corpo da solicitação:**
+- `app` (string): Nome do aplicativo.
+- `question` (string): Texto da pergunta.
 
 **Respostas:**
-- `200 OK`: Retorna um token de acesso.
-- `400 Bad Request`: Parâmetros inválidos.
-- `401 Unauthorized`: Credenciais inválidas.
+- `200 OK`: Retorna uma resposta contendo as etapas e imagens.
+- `500 Internal Server Error`: Erro interno do servidor.
 
-### Uso do token
-
-O token de acesso deve ser incluído no cabeçalho `Authorization` de cada requisição feita à API. O token deve ser precedido pelo termo "Bearer", conforme o exemplo abaixo:
-
-`Authorization`: Bearer `SEU_TOKEN_AQUI`
-
-Os endpoints de gerenciamento de tarefas exigem que o usuário esteja autenticado e autorizado para acessá-los. Caso contrário, a API retornará um erro `401 Unauthorized`.
+**Exemplo de resposta**
+```
+{
+	"steps": {
+		"appName": "Whatsapp",
+		"question": "Como alterar meu número no Whatsapp?",
+		"steps": {
+			"Clique no botão de Menu da tela Principal": [
+				"Whatsapp-Principal_Menu"
+			],
+			"Clique na opção Configurações no Menu e depois clique na opção Conta na tela de Configurações": [
+				"Whatsapp-Menu_Configuracoes",
+				"Whatsapp-Configuracoes_Conta"
+			],
+			"Na tela de Conta, clique na opção Número": [
+				"Whatsapp-Conta_Numero"
+			],
+			"Clique em \"Alterar número\" na tela de Número e digite o novo número que deseja utilizar": [
+				"Whatsapp-Numero_NovoNumero"
+			],
+			"Clique em \"Próximo\" e confirme o novo número digitado": [
+				"Whatsapp-NovoNumero_Confirmar"
+			]
+		},
+		"screens": [
+			"Whatsapp-Principal_Menu",
+			"Whatsapp-Menu_Configuracoes",
+			"Whatsapp-Configuracoes_Conta",
+			"Whatsapp-Conta_Numero",
+			"Whatsapp-Numero_NovoNumero",
+			"Whatsapp-NovoNumero_Confirmar"
+		],
+		"elements": [
+			"Whatsapp-Principal_Menu",
+			"Whatsapp-Menu_Configuracoes",
+			"Whatsapp-Configuracoes_Conta",
+			"Whatsapp-Conta_Numero",
+			"Whatsapp-Numero_NovoNumero",
+			"Whatsapp-NovoNumero_Confirmar"
+		]
+	},
+	"images": {
+		"screens": {
+			"err": null,
+			"images": {
+				"29:33": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1fff9806-5615-45aa-af0d-8f26fb60626c",
+				"143:2": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/98daf4cc-7871-42d0-8252-527fd9636a34",
+				"145:7": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/07354575-d2d5-4fbd-9ef0-1fce7989cf53",
+				"148:18": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/14a9999c-f456-4ff3-a1a2-c9f92830c936",
+				"150:2": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fd96c162-60e7-4d80-b7eb-4b1273f2bd8f"
+			}
+		}
+	}
+}
+```
 
 
 
