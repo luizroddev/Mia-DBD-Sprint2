@@ -40,6 +40,5 @@ public class User {
     @Size(min = 8)
     private String password;
 
-    @NotNull
-    private LocalDateTime dataCriacao;
+    private LocalDateTime created_at;
 }

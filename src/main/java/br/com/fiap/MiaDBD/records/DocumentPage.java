@@ -1,2 +1,4 @@
-package br.com.fiap.MiaDBD.records;public class DocumentPage {
+package br.com.fiap.MiaDBD.records;
+
+public record DocumentPage(String id, String name, DocumentScreen[] children) {
 }

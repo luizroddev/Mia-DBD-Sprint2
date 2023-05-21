@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/appapplications")
+@RequestMapping("/applications")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
@@ -27,6 +27,16 @@ public class ApplicationController {
     @GetMapping("/{id}")
     public ResponseEntity<Application> getApplicationById(@PathVariable Integer id) {
         Application application = applicationService.getApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(application, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<Application> getApplicationByName(@PathVariable String name) {
+        Application application = applicationService.getApplicationByName(name);
         if (application == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

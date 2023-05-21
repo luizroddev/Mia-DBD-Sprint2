@@ -1,6 +1,6 @@
 package br.com.fiap.MiaDBD.controllers;
 
-import br.com.fiap.MiaDBD.services.MiaServiceChatGPT;
+import br.com.fiap.MiaDBD.services.MiaChatGPTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,10 +11,10 @@ import reactor.core.publisher.Mono;
 public class MiaChatGPTController {
 
     @Autowired
-    private MiaServiceChatGPT service;
+    private MiaChatGPTService service;
 
     @PostMapping("explanation")
-    public Mono<String> createTaskExplanation(@RequestBody String topic) {
-        return service.createTaskExplanation(topic).map(response -> response.choices().get(0).text());
+    public Mono<String> createTaskExplanation(@RequestBody String question) {
+        return service.createTaskExplanation(question).map(response -> response.choices().get(0).message().content());
     }
 }

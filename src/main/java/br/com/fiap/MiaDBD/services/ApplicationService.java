@@ -22,6 +22,10 @@ public class ApplicationService {
         return applicationRepository.findById(id).orElse(null);
     }
 
+    public Application getApplicationByName(String name) {
+        return applicationRepository.findByName(name).orElse(null);
+    }
+
     public void createApplication(Application application) {
         applicationRepository.save(application);
     }

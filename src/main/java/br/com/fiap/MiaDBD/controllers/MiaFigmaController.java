@@ -1,20 +1,25 @@
 package br.com.fiap.MiaDBD.controllers;
 
-import br.com.fiap.MiaDBD.services.MiaServiceChatGPT;
+import br.com.fiap.MiaDBD.records.FigmaFileResponse;
+import br.com.fiap.MiaDBD.records.FigmaImagesResponse;
+import br.com.fiap.MiaDBD.services.MiaFigmaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class MiaChatGPTController {
+public class MiaFigmaController {
 
     @Autowired
-    private MiaServiceChatGPT service;
+    private MiaFigmaService service;
 
-    @PostMapping("explanation")
-    public Mono<String> createTaskExplanation(@RequestBody String topic) {
-        return service.createTaskExplanation(topic).map(response -> response.choices().get(0).text());
+    @GetMapping("getFigmaImage/{fileId}/{nodeId}")
+    public Mono<FigmaImagesResponse> getFigmaImage(@PathVariable String fileId, @PathVariable String nodeId) {
+        return service.getFigmaImage(fileId, nodeId);
+    }
+
+    @GetMapping("getFigmaFileNodes/{fileId}")
+    public Mono<FigmaFileResponse> getFigmaFileNodesIds(@PathVariable String fileId) {
+        return service.getFigmaFileNodesIds(fileId);
     }
 }

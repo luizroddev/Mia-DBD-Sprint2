@@ -1,4 +1,4 @@
 package br.com.fiap.MiaDBD.records;
 
-public record Choice(String text) {
+public record Choice(ChoiceMessage message) {
 }

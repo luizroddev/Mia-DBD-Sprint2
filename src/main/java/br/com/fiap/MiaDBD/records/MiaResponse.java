@@ -1,4 +1,4 @@
-package br.com.fiap.MiaDBD.services;
+package br.com.fiap.MiaDBD.records;
 
 import br.com.fiap.MiaDBD.records.MiaImagesResponse;
 import br.com.fiap.MiaDBD.records.MiaStepsResponse;
