@@ -16,6 +16,16 @@ Esta API foi criada para auxiliar no processo de lógica do aplicativo Mia. A AP
 - `applicationId` (integer, obrigatório): ID do Aplicativo a qual a tarefa se refere.
 - `createdAt` (datetime): Data e hora em que a tarefa foi criada.
 
+### Aplicação
+- `name` (string): Nome da aplicação.
+- `description` (string, opcional): Descrição da aplicação.
+- `figmaId` (string): Código do projeto no Figma.
+- `tasks` (array): Lista de tarefas relacionadas à aplicação. Cada tarefa é um objeto que contém os seguintes campos:
+  - `title` (string): Título da tarefa.
+  - `steps` (array): Lista de passos detalhados para a execução da tarefa. Cada passo é um objeto que contém um texto gerado pelo GPT-3.
+  - `applicationId` (integer, obrigatório): ID da Aplicação à qual a tarefa se refere.
+  - `createdAt` (datetime): Data e hora em que a tarefa foi criada.
+
 ## Endpoints
 
 ### Usuários
@@ -131,6 +141,73 @@ Exclui uma tarefa específica.
 **Respostas:**
 - `204 No Content`: Tarefa excluída com sucesso.
 - `404 Not Found`: Tarefa não encontrada.
+
+### Aplicativos
+
+#### `GET /app`
+Lista todas as aplicações cadastradas.
+
+**Respostas:**
+- `200 OK`: Retorna uma lista de aplicações.
+- `404 Not Found`: Nenhuma aplicação encontrada.
+
+#### `GET /app/{id}`
+Recupera informações sobre uma aplicação específica.
+
+**Parâmetros do caminho:**
+- `id` (integer, obrigatório): ID da aplicação.
+
+**Respostas:**
+- `200 OK`: Retorna informações da aplicação.
+- `404 Not Found`: Aplicação não encontrada.
+
+#### `GET /app/{name}`
+Recupera informações sobre uma aplicação específica.
+
+**Parâmetros do caminho:**
+- `name` (string, obrigatório): Nome da aplicação.
+
+**Respostas:**
+- `200 OK`: Retorna informações da aplicação.
+- `404 Not Found`: Aplicação não encontrada.
+
+#### `POST /app`
+Cria uma nova aplicação.
+
+**Corpo da solicitação:**
+- `name` (string, obrigatório): Nome da aplicação.
+- `description` (string, opcional): Descrição da aplicação.
+- `figmaId` (string, obrigatório): Código do projeto no Figma.
+
+**Respostas:**
+- `201 Created`: Aplicação criada com sucesso.
+- `400 Bad Request`: Parâmetros inválidos.
+
+#### `PUT /app/{id}`
+Atualiza informações de uma aplicação específica.
+
+**Parâmetros do caminho:**
+- `id` (integer, obrigatório): ID da aplicação.
+
+**Corpo da solicitação:**
+- `name` (string, obrigatório): Nome da aplicação.
+- `description` (string, opcional): Descrição da aplicação.
+- `figmaId` (string, obrigatório): Código do projeto no Figma.
+
+**Respostas:**
+- `204 No Content`: Aplicação atualizada com sucesso.
+- `400 Bad Request`: Parâmetros inválidos.
+- `404 Not Found`: Aplicação não encontrada.
+
+#### `DELETE /app/{id}`
+Exclui uma aplicação específica.
+
+**Parâmetros do caminho:**
+- `id` (integer, obrigatório): ID da aplicação.
+
+**Respostas:**
+- `204 No Content`: Aplicação excluída com sucesso.
+- `404 Not Found`: Aplicação não encontrada.
 
 ### Perguntas
 
