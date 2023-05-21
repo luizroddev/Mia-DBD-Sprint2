@@ -30,7 +30,7 @@ Esta API foi criada para auxiliar no processo de lógica do aplicativo Mia. A AP
 
 ### Usuários
 
-#### `POST /usuarios`
+#### `POST /users`
 Cria um novo usuário.
 
 **Parâmetros do corpo:**
@@ -42,14 +42,14 @@ Cria um novo usuário.
 - `201 Created`: Usuário criado com sucesso.
 - `400 Bad Request`: Parâmetros inválidos.
 
-#### `GET /usuarios`
+#### `GET /users`
 Lista todos os usuários cadastrados.
 
 **Respostas:**
 - `200 OK`: Retorna uma lista de usuários.
 - `404 Not Found`: Nenhum usuário encontrado.
 
-#### `GET /usuarios/{id}`
+#### `GET /users/{id}`
 Recupera informações sobre um usuário específico.
 
 **Parâmetros do caminho:**
@@ -59,7 +59,7 @@ Recupera informações sobre um usuário específico.
 - `200 OK`: Retorna informações do usuário.
 - `404 Not Found`: Usuário não encontrado.
 
-#### `PUT /usuarios/{id}`
+#### `PUT /users/{id}`
 Atualiza informações de um usuário específico.
 
 **Parâmetros do caminho:**
@@ -75,7 +75,7 @@ Atualiza informações de um usuário específico.
 - `400 Bad Request`: Parâmetros inválidos.
 - `404 Not Found`: Usuário não encontrado.
 
-#### `DELETE /usuarios/{id}`
+#### `DELETE /users/{id}`
 Exclui um usuário específico.
 
 **Parâmetros do caminho:**
