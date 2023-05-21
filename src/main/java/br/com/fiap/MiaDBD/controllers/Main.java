@@ -2,6 +2,7 @@ package br.com.fiap.MiaDBD.controllers;
 
 import java.util.*;
 import java.util.regex.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,29 +13,29 @@ public class Main {
 
         List<String> arrayList = Arrays.asList(array);
 
-        Map<String, List<String>> map = extractMap(texto, arrayList);
+        Map<String, List<String>> map = extractSteps(texto, arrayList);
 
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             System.out.println("Chave: " + entry.getKey() + ", Valor: " + entry.getValue());
         }
     }
 
-    public static Map<String, List<String>> extractMap(String texto, List<String> arrayList) {
+    public static Map<String, List<String>> extractSteps(String text, List<String> arrayList) {
         Map<String, List<String>> map = new LinkedHashMap<>();
         Pattern pattern = Pattern.compile("- (.*?) \\((.*?)\\)");
-        Matcher matcher = pattern.matcher(texto);
-        while (matcher.find()) {
-            String frase = matcher.group(1);
-            String[] indices = matcher.group(2).split(", ");
-            List<String> values = new ArrayList<>();
-            for (String indice : indices) {
-                int index = Integer.parseInt(indice);
-                if (index < arrayList.size()) {
-                    values.add(arrayList.get(index));
-                }
-            }
-            map.put(frase, values);
-        }
+        Matcher matcher = pattern.matcher(text);
+
+        matcher.results().forEach(result -> {
+            String sentence = result.group(1);
+            List<String> values = Arrays.stream(result.group(2).split(", "))
+                    .mapToInt(Integer::parseInt)
+                    .filter(index -> index < arrayList.size())
+                    .mapToObj(arrayList::get)
+                    .collect(Collectors.toList());
+
+            map.put(sentence, values);
+        });
+
         return map;
     }
 }

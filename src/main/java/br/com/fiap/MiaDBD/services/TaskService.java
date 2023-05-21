@@ -3,6 +3,8 @@ package br.com.fiap.MiaDBD.services;
 import br.com.fiap.MiaDBD.models.Task;
 import br.com.fiap.MiaDBD.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +25,7 @@ public class TaskService {
     }
 
     public void createTask(Task task) {
+        task.setCreatedAt(LocalDateTime.now());
         taskRepository.save(task);
     }
 
@@ -37,10 +40,6 @@ public class TaskService {
     }
 
     public void deleteTask(Integer id) {
-        Task existingTask = taskRepository.findById(id).orElse(null);
-
-        if (existingTask != null) {
-            taskRepository.delete(existingTask);
-        }
+        taskRepository.findById(id).ifPresent(taskRepository::delete);
     }
 }

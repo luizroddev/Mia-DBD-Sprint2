@@ -35,9 +35,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTask(@RequestBody @Validated Task task) {
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
         taskService.createTask(task);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(task, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

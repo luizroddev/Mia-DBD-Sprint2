@@ -27,6 +27,7 @@ public class ApplicationService {
     }
 
     public void createApplication(Application application) {
+        application.setName(application.getName().toLowerCase());
         applicationRepository.save(application);
     }
 

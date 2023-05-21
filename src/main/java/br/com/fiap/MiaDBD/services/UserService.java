@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public void createUser(User user) {
-        user.setCreated_at(LocalDateTime.now());
+        user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
     }
 
@@ -33,7 +33,7 @@ public class UserService {
 
         if (existingUser != null) {
             user.setId(id);
-            user.setCreated_at(existingUser.getCreated_at());
+            user.setCreatedAt(existingUser.getCreatedAt());
             userRepository.save(user);
         }
     }

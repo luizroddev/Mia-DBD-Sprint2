@@ -22,7 +22,6 @@ public class MiaFigmaService {
     }
 
     public Mono<FigmaImagesResponse> getFigmaImage(String fileId, String nodeId) {
-        System.out.println(nodeId);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/images/{fileId}")

@@ -40,5 +40,5 @@ public class User {
     @Size(min = 8)
     private String password;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

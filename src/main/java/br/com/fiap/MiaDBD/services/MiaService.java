@@ -29,11 +29,7 @@ public class MiaService {
 
         matcher.results().forEach(result -> {
             String sentence = result.group(1);
-            List<String> values = Arrays.stream(result.group(2).split(", "))
-                    .mapToInt(Integer::parseInt)
-                    .filter(index -> index < arrayList.size())
-                    .mapToObj(arrayList::get)
-                    .collect(Collectors.toList());
+            List<String> values = Arrays.stream(result.group(2).split(", ")).mapToInt(Integer::parseInt).filter(index -> index < arrayList.size()).mapToObj(arrayList::get).collect(Collectors.toList());
 
             map.put(sentence, values);
         });
@@ -46,46 +42,38 @@ public class MiaService {
 
         return explanation.map(choice -> {
             String content = choice.choices().get(0).message().content();
-            List<String> steps = List.of(content.substring(content.indexOf("["), content.indexOf("]")));
+
+            List<String> steps = new ArrayList<>();
+
+            try {
+                String arrayString = content.substring(content.indexOf("["), content.indexOf("]") + 1);
+                String arrayStringFormatted = arrayString.substring(1, arrayString.length() - 1);
+                String[] array = arrayStringFormatted.split(", ");
+
+                // Cria uma stream com as substrings e remove os colchetes individuais de cada uma
+                steps.addAll(Arrays.stream(array).map(s -> s.replaceAll("\\[|\\]", "")).toList());
+            } catch (Exception e) {
+                System.out.println("ChatGPT falhou em criar a lista\n" + e);
+            }
 
             Map<String, List<String>> map = extractSteps(choice.choices().get(0).message().content(), steps);
-            ArrayList<String> screens = new ArrayList<>(Arrays.asList("Whatsapp-tela-Idioma".toLowerCase(), "Whatsapp-tela-Menu".toLowerCase()));
-            ArrayList<String> elements = new ArrayList<>(Arrays.asList("image 1".toLowerCase(), "acao_opcao_Configuracoes".toLowerCase()));
 
-
-            return new MiaStepsResponse(appName, question, map, screens, elements);
+            return new MiaStepsResponse(appName, question, map, steps, steps);
         });
     }
 
     public Mono<MiaImagesResponse> getImages(MiaStepsResponse response) {
-        String fileId = "8tmmUHx8kFebwVBQh1L7dN";
+        String fileId = applicationService.getApplicationByName(response.appName().toLowerCase()).getFigmaId();
 
-        return figmaService.getFigmaFileNodesIds(fileId)
-                .flatMap(figmaFile -> {
-                    DocumentScreen[] documentScreens = figmaFile.document().children()[0].children();
-                    List<DocumentScreen> screens = Arrays.stream(documentScreens)
-                            .filter(screen -> response.screens().contains(screen.name().toLowerCase()))
-                            .toList();
-                    List<String> screenIds = screens.stream()
-                            .map(DocumentScreen::id)
-                            .collect(Collectors.toList());
+        return figmaService.getFigmaFileNodesIds(fileId).flatMap(figmaFile -> {
+            DocumentScreen[] documentScreens = figmaFile.document().children()[0].children();
+            List<DocumentScreen> screens = Arrays.stream(documentScreens).filter(screen -> response.screens().contains(screen.name())).toList();
+            List<String> screenIds = screens.stream().map(DocumentScreen::id).collect(Collectors.toList());
 
-                    List<DocumentElement> screenElements = new ArrayList<>();
+            Mono<FigmaImagesResponse> screenImages = figmaService.getFigmaImage(fileId, String.join(",", screenIds));
 
-                    for (int i = 0; i < response.elements().size(); i++) {
-                        screenElements.addAll(List.of(screens.get(i).children()));
-                    }
-
-                    List<String> elementsIds = screenElements.stream()
-                            .filter(element -> response.elements().contains(element.name().toLowerCase()))
-                            .map(DocumentElement::id)
-                            .toList();
-
-                    Mono<FigmaImagesResponse> screenImages = figmaService.getFigmaImage(fileId, String.join(",", screenIds));
-                    Mono<FigmaImagesResponse> elementsImages = figmaService.getFigmaImage(fileId, String.join(",", elementsIds));
-
-                    return Mono.zip(screenImages, elementsImages)
-                            .map(tuple -> new MiaImagesResponse(tuple.getT1(), tuple.getT2()));
-                });
+            return screenImages.map(MiaImagesResponse::new);
+        }).onErrorResume(e -> Mono.empty());
     }
+
 }

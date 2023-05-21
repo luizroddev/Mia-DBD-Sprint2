@@ -29,9 +29,9 @@ public class Application {
     @Size(min = 3, max = 50)
     private String description;
 
-    @NotBlank(message = "A categoria é obrigatória")
+    @NotBlank(message = "O código figma é obrigatório ")
     @Size(min = 3, max = 50)
-    private String category;
+    private String figmaId;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;

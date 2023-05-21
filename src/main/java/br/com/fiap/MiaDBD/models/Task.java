@@ -28,11 +28,11 @@ public class Task {
     @Size(min = 3, max = 50)
     private String title;
 
-    @NotNull
     private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "applicationId")
+    @NotNull
     private Application application;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
